@@ -1,0 +1,34 @@
+{
+  "name": "Glean Zendesk App",
+  "author": {
+    "name": "Glean",
+    "email": "support@glean.com",
+    "url": "https://glean.com"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": {
+        "autoHide": true,
+        "url": "assets/iframe.html"
+      }
+    }
+  },
+  "parameters": [
+    {
+      "name": "targetURL",
+      "type": "text",
+      "secure": false,
+      "required": true
+    },
+    {
+      "name": "secret",
+      "type": "text",
+      "secure": false,
+      "required": true
+    }
+  ],
+  "version": "1.0",
+  "frameworkVersion": "2.0"
+}
