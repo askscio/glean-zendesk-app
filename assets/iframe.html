@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/@zendeskgarden/css-bedrock@7.0.21,npm/@zendeskgarden/css-utilities@4.3.0">
 </head>
 <body>
-  <h2 class="u-semibold u-fs-xl">Hello, World!</h2>
   <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
   <script>
     // Initialise the Zendesk JavaScript API client
@@ -29,9 +28,30 @@
       });
     }
 
+    async function importKey(secret) {
+      return await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(secret),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign', 'verify'],
+      )
+    }
+
+    async function signRequest(message, secret) {
+      const key = await importKey(secret)
+      const signature = await crypto.subtle.sign(
+        'HMAC',
+        key,
+        new TextEncoder().encode(message),
+      )
+      // Convert ArrayBuffer to Base64
+      return btoa(String.fromCharCode(...new Uint8Array(signature)))
+    }
+
     async function getRequestData() {
       return {
-        user: await getCurrentUserId(),
+        userId: await getCurrentUserId(),
         ticketId: await getCurrentTicketId()
       }
     }
@@ -40,13 +60,20 @@
       const targetURL = await client.metadata().then(function(metadata) {
         return metadata.settings.targetURL;
       });
+      const secret = await client.metadata().then(function(metadata) {
+        return metadata.settings.secret;
+      });
       const requestData = await getRequestData();
+      const body = JSON.stringify(requestData);
+      var signature = await signRequest(body, secret);
+
       var visitRequest = {
         url: targetURL,
         type: 'POST',
         cors: true,
+        headers: { 'X-webhook-signature': signature },
         contentType: 'application/json',
-        data: JSON.stringify(requestData)
+        data: body
       };
       client.request(visitRequest).then(
         function(data) {

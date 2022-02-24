@@ -21,6 +21,12 @@
       "type": "text",
       "secure": false,
       "required": true
+    },
+    {
+      "name": "secret",
+      "type": "text",
+      "secure": false,
+      "required": true
     }
   ],
   "version": "1.0",
