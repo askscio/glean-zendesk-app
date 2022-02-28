@@ -6,4 +6,4 @@ This app provides additional ranking signals for Glean. It sends additional webh
 
 ### Implementation
 
-Upon installing the app, a targetURL must be specified. This app will send page view webhooks to the targetURL. The URL will be in the format of "https://<customer>.glean.com/instance/ZENDESK/scio_event" (Glean will provide you with the exact targetURL).
+Upon installing the app, a targetURL must be specified. This app will send page view webhooks to the targetURL. The URL will be in the format of "https://\<customer\>.glean.com/instance/ZENDESK/scio_event" (Glean will provide you with the exact targetURL).
